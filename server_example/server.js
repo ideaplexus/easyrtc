@@ -17,9 +17,22 @@ var webServer = http.createServer(app).listen(process.env.PORT||8080);
 
 // Start Socket.io so it attaches itself to Express server
 var socketServer = socketIo.listen(webServer, {"log level":1});
-
-easyrtc.setOption("logLevel", "debug");
-
+myIceServers = [                                    // Array of STUN and TURN servers. By default there is only publicly available STUN servers.
+    {urls: "stun:stun.l.google.com:19302"},
+  {
+    "url":"turn:numb.viagenie.ca",
+    "username":"cwcwebrtc@gmail.com",
+    "credential":"turnturn"
+  },
+    {urls: "stun:stun.sipgate.net"},
+    {urls: "stun:217.10.68.152"},
+    {urls: "stun:stun.sipgate.net:10000"},
+    {urls: "stun:217.10.68.152:10000"}
+];
+easyrtc.setOption({"appIceServers",myIceServers},{"logLevel", "debug"});
+easyrtc.on("getIceConfig", function(connectionObj, callback){
+  callback(null, myIceServers);
+});
 // Overriding the default easyrtcAuth listener, only so we can directly access its callback
 easyrtc.events.on("easyrtcAuth", function(socket, easyrtcid, msg, socketCallback, callback) {
     easyrtc.events.defaultListeners.easyrtcAuth(socket, easyrtcid, msg, socketCallback, function(err, connectionObj){
