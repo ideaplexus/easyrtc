@@ -29,7 +29,7 @@ myIceServers = [                                    // Array of STUN and TURN se
     {urls: "stun:stun.sipgate.net:10000"},
     {urls: "stun:217.10.68.152:10000"}
 ];
-easyrtc.setOption({"appIceServers",myIceServers},{"logLevel", "debug"});
+easyrtc.setOption({"appIceServers",myIceServers});
 easyrtc.on("getIceConfig", function(connectionObj, callback){
   callback(null, myIceServers);
 });
